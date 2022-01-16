@@ -89,6 +89,19 @@ describe("type inference ", () => {
         const result = fn(Test);
     `).toInfer("result", "string");
     });
+
+    it("when pass class with any parameter", () => {
+      expectSnippet(`
+        class Test {
+          constructor(
+            private readonly p1: any,
+            private readonly p2: Ref<string>,
+          ) {}
+        }
+
+        const result = fn(Test);
+    `).toInfer("result", "string");
+    });
   }
 
   describe("foo - v1", () => {

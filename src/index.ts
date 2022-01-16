@@ -1,5 +1,5 @@
 import { Test } from "ts-toolbelt";
-import { Component, TupleToUnion } from "./helper";
+import { TupleToUnion } from "./helper";
 import {
   foo,
   GetRefsFromConstructor,
@@ -19,8 +19,7 @@ export class TestWorking {
   constructor(
     private readonly p1: string,
     private readonly p3: Ref<symbol>,
-    private readonly p2: number,
-    private readonly p4: symbol
+    private readonly p2: number
   ) {}
 }
 
@@ -42,7 +41,15 @@ export class TestError {
 }
 
 export class TestWithUnknown {
-  constructor(private readonly p2: Ref<symbol>, private readonly p3: unknown) {}
+  constructor(
+    private readonly p2: Ref<symbol>,
+    private readonly p3: string,
+    private readonly p4: unknown
+  ) {}
+}
+
+export class TestWithAny {
+  constructor(private readonly p2: Ref<symbol>, private readonly p1: any) {}
 }
 
 export class TestError2 {
@@ -58,12 +65,14 @@ const b = foo(MultipleTestWorking);
 const c = foo(TestError);
 const d = foo(TestError2);
 const e = foo(TestWithUnknown);
+const f = foo(TestWithAny);
 
 const a1 = fooTsToolbelt(TestWorking);
 const b1 = fooTsToolbelt(MultipleTestWorking);
 const c1 = fooTsToolbelt(TestError);
 const d1 = fooTsToolbelt(TestError2);
 const e1 = fooTsToolbelt(TestWithUnknown);
+const f1 = fooTsToolbelt(TestWithAny);
 
 const { checks, check } = Test;
 
@@ -85,6 +94,7 @@ type ResultB = string | symbol | Ref<string>;
 type ResultC = never;
 type ResultD = never;
 type ResultE = symbol;
+type ResultF = symbol;
 
 checks([
   check<typeof a, ResultA, Test.Pass>(),
@@ -92,12 +102,14 @@ checks([
   check<typeof c, ResultC, Test.Pass>(),
   check<typeof d, ResultD, Test.Pass>(),
   check<typeof e, ResultE, Test.Pass>(),
+  check<typeof f, ResultF, Test.Pass>(),
 
   check<typeof a1, ResultA, Test.Pass>(),
   check<typeof b1, ResultB, Test.Pass>(),
   check<typeof c1, ResultC, Test.Pass>(),
   check<typeof d1, ResultD, Test.Pass>(),
-  check<typeof e1, ResultE, Test.Pass>()
+  check<typeof e1, ResultE, Test.Pass>(),
+  check<typeof f1, ResultF, Test.Pass>()
 ]);
 
 ///
