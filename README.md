@@ -1,4 +1,5 @@
-# Typescript advanced type-check - constructor parameter constraint
+> # Typescript advanced type-check
+> ### Constructor parameter constraint
 
 ## Table of contents
 
@@ -298,3 +299,5 @@ the right values. That way if the type doesn't really extend U, we always return
 unknown or never.
 
 In this case it is also necessary to pay attention to the distribution, reason why we wrap with a [ ] our type.
+
+That's it, if you haven't got a headache, you're on the right way
