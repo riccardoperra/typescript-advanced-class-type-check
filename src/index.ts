@@ -1,19 +1,17 @@
 import { Test } from "ts-toolbelt";
-import { TupleToUnion } from "./helper";
+import { TupleToUnion } from "./helpers";
 import {
-  foo,
+  ExtractRefs,
   GetRefsFromConstructor,
   Output,
   Ref,
-  ExtractRefs,
-  StrictComponent
+  StrictComponent,
 } from "./ref";
 import {
+  _GetRefsFromConstructor,
   _Output,
   _StrictComponent,
-  _GetRefsFromConstructor,
-  fooTsToolbelt
-} from "./ref-v2";
+} from "./ref-tstoolbelt";
 
 export class TestWorking {
   constructor(
@@ -60,20 +58,6 @@ export class TestError2 {
   ) {}
 }
 
-const a = foo(TestWorking);
-const b = foo(MultipleTestWorking);
-const c = foo(TestError);
-const d = foo(TestError2);
-const e = foo(TestWithUnknown);
-const f = foo(TestWithAny);
-
-const a1 = fooTsToolbelt(TestWorking);
-const b1 = fooTsToolbelt(MultipleTestWorking);
-const c1 = fooTsToolbelt(TestError);
-const d1 = fooTsToolbelt(TestError2);
-const e1 = fooTsToolbelt(TestWithUnknown);
-const f1 = fooTsToolbelt(TestWithAny);
-
 const { checks, check } = Test;
 
 ///
@@ -84,33 +68,6 @@ type ExtractRefInput = [Ref<string>, Ref<number>, Ref<Ref<string>>];
 type ExtractRefResult = string | number | Ref<string>;
 
 checks([check<ExtractRefs<ExtractRefInput>, ExtractRefResult, Test.Pass>()]);
-
-///
-/// TYPEOF RESULT TEST
-///
-
-type ResultA = symbol;
-type ResultB = string | symbol | Ref<string>;
-type ResultC = never;
-type ResultD = never;
-type ResultE = symbol;
-type ResultF = symbol;
-
-checks([
-  check<typeof a, ResultA, Test.Pass>(),
-  check<typeof b, ResultB, Test.Pass>(),
-  check<typeof c, ResultC, Test.Pass>(),
-  check<typeof d, ResultD, Test.Pass>(),
-  check<typeof e, ResultE, Test.Pass>(),
-  check<typeof f, ResultF, Test.Pass>(),
-
-  check<typeof a1, ResultA, Test.Pass>(),
-  check<typeof b1, ResultB, Test.Pass>(),
-  check<typeof c1, ResultC, Test.Pass>(),
-  check<typeof d1, ResultD, Test.Pass>(),
-  check<typeof e1, ResultE, Test.Pass>(),
-  check<typeof f1, ResultF, Test.Pass>()
-]);
 
 ///
 /// OUTPUT
@@ -126,6 +83,7 @@ checks([
   check<Output<typeof TestError>, never, Test.Pass>(),
   check<Output<typeof TestError2>, never, Test.Pass>(),
   check<Output<typeof TestWithUnknown>, symbol, Test.Pass>(),
+  check<Output<typeof TestWithAny>, symbol, Test.Pass>(),
 
   check<_Output<typeof TestWorking>, symbol, Test.Pass>(),
   check<
@@ -135,7 +93,8 @@ checks([
   >(),
   check<_Output<typeof TestError>, never, Test.Pass>(),
   check<_Output<typeof TestError2>, never, Test.Pass>(),
-  check<_Output<typeof TestWithUnknown>, symbol, Test.Pass>()
+  check<_Output<typeof TestWithUnknown>, symbol, Test.Pass>(),
+  check<_Output<typeof TestWithAny>, symbol, Test.Pass>(),
 ]);
 
 ///
@@ -151,6 +110,7 @@ checks([
     typeof TestWithUnknown,
     Test.Pass
   >(),
+  check<StrictComponent<typeof TestWithAny>, typeof TestWithAny, Test.Pass>(),
 
   check<_StrictComponent<typeof TestWorking>, typeof TestWorking, Test.Pass>(),
   check<_StrictComponent<typeof TestError>, typeof TestError, Test.Fail>(),
@@ -159,7 +119,8 @@ checks([
     _StrictComponent<typeof TestWithUnknown>,
     typeof TestWithUnknown,
     Test.Pass
-  >()
+  >(),
+  check<_StrictComponent<typeof TestWithAny>, typeof TestWithAny, Test.Pass>(),
 ]);
 
 ///
@@ -175,6 +136,7 @@ checks([
   >(),
   check<GetRefsFromConstructor<typeof TestError>, [], Test.Pass>(),
   check<GetRefsFromConstructor<typeof TestError2>, [], Test.Pass>(),
+  check<GetRefsFromConstructor<typeof TestWithAny>, [Ref<symbol>], Test.Pass>(),
 
   check<
     _GetRefsFromConstructor<typeof TestWorking>,
@@ -187,7 +149,12 @@ checks([
     Test.Pass
   >(),
   check<_GetRefsFromConstructor<typeof TestError>, [], Test.Pass>(),
-  check<_GetRefsFromConstructor<typeof TestError2>, [], Test.Pass>()
+  check<_GetRefsFromConstructor<typeof TestError2>, [], Test.Pass>(),
+  check<
+    _GetRefsFromConstructor<typeof TestWithAny>,
+    [Ref<symbol>],
+    Test.Pass
+  >(),
 ]);
 
 ///
@@ -202,7 +169,7 @@ checks([
   >(),
   check<
     TupleToUnion<[Ref<string>, Ref<number>, Ref<Ref<string>>]>,
-    Ref<string> | Ref<number> | Ref<string>,
+    Ref<number> | Ref<string>,
     Test.Pass
-  >()
+  >(),
 ]);

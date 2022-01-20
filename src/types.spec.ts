@@ -5,7 +5,7 @@ export const compilerOptions = () => ({
   target: "es2015",
   module: "esnext",
   baseUrl: ".",
-  experimentalDecorators: true
+  experimentalDecorators: true,
 });
 
 describe("type inference ", () => {
@@ -112,21 +112,21 @@ describe("type inference ", () => {
       `,
       {
         ...compilerOptions(),
-        strict: true
+        strict: true,
       }
     );
     testWith(expectSnippet);
   });
 
-  describe("fooTsToolbelt - v2", () => {
+  describe("fooTsToolbelt", () => {
     const expectSnippet = expecter(
       (code) => `
-        import {fooTsToolbelt as fn} from './src/ref-v2'; 
+        import {fooTsToolbelt as fn} from './src/ref-tstoolbelt'; 
         ${snippetFactory(code)}
       `,
       {
         ...compilerOptions(),
-        strict: true
+        strict: true,
       }
     );
     testWith(expectSnippet);

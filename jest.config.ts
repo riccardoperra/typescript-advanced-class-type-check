@@ -12,9 +12,9 @@ export default {
       "./node_modules/jest-html-reporter",
       {
         pageTitle: "Test Report",
-        outputPath: "./test-report/index.html"
-      }
-    ]
+        outputPath: "./test-report/index.html",
+      },
+    ],
   ],
 
   // Stop running tests after `n` failures
@@ -103,7 +103,7 @@ export default {
   // notifyMode: "failure-change",
 
   // A preset that is used as a base for Jest's configuration
-  preset: "ts-jest"
+  preset: "ts-jest",
 
   // Run tests from one or more projects
   // projects: undefined,
