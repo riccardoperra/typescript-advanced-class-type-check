@@ -268,9 +268,14 @@ export type TupleToUnion<T extends readonly unknown[]> = {
 }[number];
 
 type A = [string, number];
-
 // string | number
 type B = TupleToUnion<A>;
+// Conditional type
+type C = A['length'] extends 0
+  ? never
+  : A['length'] extends 1
+    ? A[0]
+    : TupleToUnion<A>;
 ```
 
 ### Exclude `any`,  `never`, `unknown`
