@@ -1,5 +1,4 @@
 import { Test } from "ts-toolbelt";
-import { TupleToUnion } from "./helpers";
 import {
   ExtractRefs,
   GetRefsFromConstructor,
@@ -153,23 +152,6 @@ checks([
   check<
     _GetRefsFromConstructor<typeof TestWithAny>,
     [Ref<symbol>],
-    Test.Pass
-  >(),
-]);
-
-///
-/// Tuple to Union
-///
-
-checks([
-  check<
-    TupleToUnion<[string, number, symbol]>,
-    string | number | symbol,
-    Test.Pass
-  >(),
-  check<
-    TupleToUnion<[Ref<string>, Ref<number>, Ref<Ref<string>>]>,
-    Ref<number> | Ref<string>,
     Test.Pass
   >(),
 ]);

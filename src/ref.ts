@@ -2,6 +2,12 @@ import { Component, TupleSelect } from "./helpers";
 
 declare const tag: unique symbol;
 export type Opaque<T, Token = unknown> = T & { [tag]: Token };
+
+/**
+ * Since Ref is an interface, we need to create an opaque type with a condition
+ * of uniqueness in such a way that the `extends` keyword don't complain when
+ * using Record, {}, object or unknown types.
+ */
 export type Ref<T> = Opaque<T, "Ref">;
 
 export type ExtractRefs<T extends readonly unknown[]> = {
