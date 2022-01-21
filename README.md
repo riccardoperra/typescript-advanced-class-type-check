@@ -67,7 +67,7 @@ const result = foo(Foo);
 const result2 = foo(FooBad);
 ```
 
-First, we need to define a utility type that a defines a class constructor. Our function will take a class as parameter
+First, we need to define a utility type that defines a class constructor. Our function will take a class as parameter
 and return an output type.
 
 ```ts
@@ -208,40 +208,13 @@ const result2 = foo(FooBad);
 
 ## Advanced cases
 
-The previous explanation didn't cover the cases where we need to filter an Interface. Also, what happens if the tuple of
+The previous explanation didn't cover the case where we need to match an Interface type instead of a class. Also, what happens if the tuple of
 the passed parameters has `any`, `never` or `unknown` types? What about if the tuple has more than one element?
-
-Let's see the first problem: the `Interface`, or an object type.
 
 ### Opaque types
 
-```ts
-import { TupleSelect } from "./helpers";
-
-interface A {
-}
-
-interface B {
-}
-
-type C = { p2: string };
-D = { p1: string };
-
-class Foo {
-  constructor(readonly a: A, readonly b: B, readonly c: C, readonly d: D) {
-  }
-}
-
-// Result: [a: A, b: B, c: C, d: D]
-type Filtered = TupleSelect<ConstructorParameters<typeof Foo>, A>
-```
-
-If we try to filter out type A from here, we will get back a tuple which contains all the properties. This is because
-the type A is an empty interface, and it extends another empty interface (even if it has a different name), or an object
-type that has some properties inside.
-
-To solve, we need to make our interface unique, and this is possible with the `Opaque` type. It's nothing complicated,
-but it allows us to unify our interface.
+Trying to filter out type A, we will get back a tuple which contains all the properties. This is because
+the type A is an empty interface, and it always extends an empty interface, even if it has a different name, or an object type.
 
 ```ts
 declare const tag: unique symbol;
@@ -254,7 +227,7 @@ export type A = Opaque<_A, 'A'>;
 ```
 
 The magic happens thanks to the constant tag that we declare, but that we don't export. This way the [tag] property will
-not really be recognized, but we actually have a unique type of its kind.
+not really be recognized, but we actually have a unique type based on what we pass as a generic.
 
 ### Handle tuple with different length
 
